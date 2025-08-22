@@ -10,6 +10,8 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(NavigationRouter.self) private var router
+
     @Query private var items: [Item]
 
     var body: some View {
