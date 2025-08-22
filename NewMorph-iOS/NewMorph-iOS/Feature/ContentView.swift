@@ -21,5 +21,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(NavigationRouter())
         .modelContainer(for: Item.self, inMemory: true)
 }
