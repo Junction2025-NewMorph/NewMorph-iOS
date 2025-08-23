@@ -13,36 +13,28 @@ struct QuestionViewDateBar: View {
     let month: MonthContext
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack {
             Button {
                 moveDay(-1)
             } label: {
-                Image(systemName: "chevron.left")
-                    .font(.title3)
-                    .foregroundStyle(.primary)
-                    .padding(.horizontal, 6)
+                Image(.icnPlayArrowLeft)
             }
-            .buttonStyle(.plain)
+            .padding(.leading, 8)
             
             Spacer()
             
             Text(dateTitle(currentDate))
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(.primary)
-                .contentTransition(.numericText())
-                .monospacedDigit()
+                .font(.custom(FontName.pretendardSemiBold.rawValue, size: 16))
+                .foregroundStyle(.nmGrayscale1)
             
             Spacer()
             
             Button {
                 moveDay(1)
             } label: {
-                Image(systemName: "chevron.right")
-                    .font(.title3)
-                    .foregroundStyle(.primary)
-                    .padding(.horizontal, 6)
+                Image(.icnPlayArrowRight)
             }
-            .buttonStyle(.plain)
+            .padding(.trailing, 8)
         }
         .padding(.horizontal, 20)
     }
@@ -62,9 +54,9 @@ private extension QuestionViewDateBar {
     }
     
     func dateTitle(_ date: Date) -> String {
-        let cal = Calendar.current
-        let m = cal.component(.month, from: date)
-        let d = cal.component(.day, from: date)
-        return String(format: "%02d월 %02d일", m, d)
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "MMM d"
+        return formatter.string(from: date)
     }
 }

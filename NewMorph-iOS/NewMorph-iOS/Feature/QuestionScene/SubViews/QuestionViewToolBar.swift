@@ -8,29 +8,26 @@
 import SwiftUI
 
 struct QuestionViewToolBar: View {
+    let onCalenderTapped: () -> Void
+    
     var body: some View {
         HStack {
-            Text("BlahBlah")
-                .font(.system(size: 28, weight: .black, design: .rounded))
-                .foregroundStyle(Color(hue: 0.44, saturation: 0.63, brightness: 0.72)) // mint-ish
-                .shadow(radius: 0.5)
+            Image(.mainLogo)
             
             Spacer()
             
             Button {
-                // TODO: 달력 화면 이동 등
+                onCalenderTapped()
             } label: {
-                Image(systemName: "calendar")
-                    .font(.title3)
-                    .foregroundStyle(.primary)
+                Image(.icnCalender)
             }
             .buttonStyle(.plain)
         }
         .padding(.horizontal, 20)
-        .padding(.top, 8)
+        .padding(.top, 12)
     }
 }
 
 #Preview {
-    QuestionViewToolBar()
+    QuestionViewToolBar(onCalenderTapped: {})
 }

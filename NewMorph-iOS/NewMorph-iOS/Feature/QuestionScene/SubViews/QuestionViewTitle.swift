@@ -8,22 +8,17 @@
 import SwiftUI
 
 struct QuestionViewTitle: View {
+    let qustionTitle: String
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("최근에 시청한")
-                .font(.system(size: 24, weight: .heavy))
-                .foregroundStyle(.primary)
-            HStack(spacing: 4) {
-                Text("유튜브 영상은 뭐야?")
-                    .font(.system(size: 24, weight: .heavy))
-                    .foregroundStyle(.primary)
-                Spacer(minLength: 0)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        Text(qustionTitle)
+            .font(.custom(FontName.pretendardBold.rawValue, size: 24))
+            .foregroundStyle(.nmGrayscale1)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .multilineTextAlignment(.center)
     }
 }
 
 #Preview {
-    QuestionViewTitle()
+    QuestionViewTitle(qustionTitle: "What’s the last\nTV show you watched?")
 }
