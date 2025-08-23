@@ -30,4 +30,5 @@ struct NavigationHostView: View {
 
 #Preview {
     NavigationHostView()
+        .environment(NavigationRouter())
 }
