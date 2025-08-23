@@ -134,6 +134,7 @@ iOSInjectionProject/
 
 ### Env
 *.xcconfig
+NewMorph-iOS/NewMorph-iOS/Core/Resources/Config.xcconfig
 .env
 
 ### Firebase

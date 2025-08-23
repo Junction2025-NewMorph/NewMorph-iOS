@@ -4,12 +4,15 @@
 <dict>
 	<key>OPENAI_API_KEY</key>
 	<string>$(OPENAI_API_KEY)</string>
+	<key>OPENAI_API_BASE_URL</key>
+	<string>$(OPENAI_API_BASE_URL)</string>
+	<key>OPENAI_MODEL</key>
+	<string>$(OPENAI_MODEL)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Black.otf</string>
 		<string>Pretendard-Bold.otf</string>
 		<string>Pretendard-ExtraBold.otf</string>
-		<string>Pretendard-ExtraLight.otf</string>
 		<string>Pretendard-Light.otf</string>
 		<string>Pretendard-Medium.otf</string>
 		<string>Pretendard-Regular.otf</string>
