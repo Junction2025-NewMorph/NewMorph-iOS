@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2537B0F02E59F1180077BB6D /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 2537B0EF2E59F1180077BB6D /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		2537B0EF2E59F1180077BB6D /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		3D7BCB752E5749CF00BD2C78 /* NewMorph-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NewMorph-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -47,6 +52,7 @@
 			children = (
 				3D7BCB772E5749CF00BD2C78 /* NewMorph-iOS */,
 				3D7BCB762E5749CF00BD2C78 /* Products */,
+				2537B0EF2E59F1180077BB6D /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,6 +128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2537B0F02E59F1180077BB6D /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

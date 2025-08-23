@@ -9,4 +9,5 @@ import Foundation
 
 public enum AppRoute: Hashable {
     case home
+    case demo
 }

@@ -24,11 +24,13 @@ struct NewMorph_iOSApp: App {
     }()
 
     @State private var router = NavigationRouter()
+    @State private var container = AppContainer()
 
     var body: some Scene {
         WindowGroup {
             NavigationHostView()
                 .environment(router)
+                .environment(container)
         }
         .modelContainer(sharedModelContainer)
     }
