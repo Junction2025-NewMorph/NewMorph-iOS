@@ -28,6 +28,8 @@ struct NavigationHostView: View {
         case .demo:
             let viewModel = DemoViewModel(useCase: container.normalizeEnglishUseCase)
             DemoView(viewModel: viewModel)
+        case .voiceInput:
+            VoiceInputView()
         }
     }
 }
