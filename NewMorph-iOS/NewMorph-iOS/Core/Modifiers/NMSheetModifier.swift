@@ -22,7 +22,7 @@ struct NMSheetModifier<SheetContent: View>: ViewModifier {
             content
             
             if isPresented {
-                Color.black.opacity(0.4)
+                Color.sheetBackground
                     .ignoresSafeArea()
                     .onTapGesture {
                         withAnimation { isPresented = false }
@@ -32,25 +32,23 @@ struct NMSheetModifier<SheetContent: View>: ViewModifier {
                 
                 VStack {
                     Spacer()
-                    NMSheet {
-                        sheetContent
-                    }
-                    .offset(y: offsetY)
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                if value.translation.height > 0 {
-                                    offsetY = value.translation.height
+                    NMSheet { sheetContent }
+                        .offset(y: offsetY)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    if value.translation.height > 0 {
+                                        offsetY = value.translation.height
+                                    }
                                 }
-                            }
-                            .onEnded { value in
-                                if value.translation.height > 100 {
-                                    isPresented = false
-                                    onDismiss?()
+                                .onEnded { value in
+                                    if value.translation.height > 100 {
+                                        isPresented = false
+                                        onDismiss?()
+                                    }
+                                    offsetY = 0
                                 }
-                                offsetY = 0
-                            }
-                    )
+                        )
                 }
                 .ignoresSafeArea()
                 .transition(.move(edge: .bottom).combined(with: .opacity))
