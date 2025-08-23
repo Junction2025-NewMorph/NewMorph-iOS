@@ -28,6 +28,13 @@ struct NavigationHostView: View {
         case .demo:
             let viewModel = DemoViewModel(useCase: container.normalizeEnglishUseCase)
             DemoView(viewModel: viewModel)
+        case .expression:
+            let viewModel = ExpressionViewModel(useCase: container.normalizeEnglishUseCase)
+            ExpressionView(viewModel: viewModel)
+        case .speakingResult:
+            let speakingResultVM = SpeakingResultViewModel()
+            let expressionVM = ExpressionViewModel(useCase: container.normalizeEnglishUseCase)
+            ScrollableSpeakingResultView(speakingResultViewModel: speakingResultVM, expressionViewModel: expressionVM)
         case .question:
             QuetionView(entry: nil, onMicTapped: {})
         case .calender:
