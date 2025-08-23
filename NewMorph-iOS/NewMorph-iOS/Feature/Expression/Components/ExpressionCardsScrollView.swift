@@ -100,11 +100,10 @@ struct ExpressionCard: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sizeThatFitsLayout) {
     let container = AppContainer.mock()
-    let viewModel = ExpressionViewModel(useCase: container.normalizeEnglishUseCase)
+    let viewModel = ExpressionViewModel(useCase: container.normalizeEnglishUseCase, targetDate: Date())
     
     ExpressionCardsScrollView(viewModel: viewModel)
-        .previewLayout(.sizeThatFits)
         .padding()
 }

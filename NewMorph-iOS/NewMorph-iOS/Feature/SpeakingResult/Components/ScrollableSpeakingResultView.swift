@@ -282,7 +282,7 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 #Preview {
     let speakingResultVM = SpeakingResultViewModel()
     let container = AppContainer.mock()
-    let expressionVM = ExpressionViewModel(useCase: container.normalizeEnglishUseCase)
+    let expressionVM = ExpressionViewModel(useCase: container.normalizeEnglishUseCase, targetDate: Date())
     
     ScrollableSpeakingResultView(speakingResultViewModel: speakingResultVM, expressionViewModel: expressionVM)
 }

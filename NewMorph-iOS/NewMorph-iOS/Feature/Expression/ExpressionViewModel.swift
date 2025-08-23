@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import SwiftData
 
 @MainActor
 final class ExpressionViewModel: ObservableObject {
@@ -14,12 +15,36 @@ final class ExpressionViewModel: ObservableObject {
     @Published private(set) var state = ExpressionViewState()
     
     private let useCase: NormalizeEnglishUseCase
+    private let targetDate: Date
     
-    init(useCase: NormalizeEnglishUseCase) {
+    init(useCase: NormalizeEnglishUseCase, targetDate: Date = Date()) {
         self.useCase = useCase
-        // 초기 데이터 설정 (스크린샷의 예시 텍스트)
+        self.targetDate = targetDate
+        
+        // 기본값 설정 (JournalEntry가 로드되기 전까지)
         state.originalText = "I just finished Crash Landing on You. I liked it a lot — some parts were kinda cringy, but overall it was super fun"
         state.translatedText = "I just finished 사랑의 불시착 and I really liked it, some part was 조금 오글거려 but 여전히 재밌었어!"
+    }
+    
+    // MARK: - Data Loading
+    func loadJournalEntry(modelContext: ModelContext) {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: targetDate)
+        let end = cal.date(byAdding: .day, value: 1, to: start)!
+        
+        let predicate = #Predicate<JournalEntry> { entry in
+            entry.date >= start && entry.date < end
+        }
+        let descriptor = FetchDescriptor<JournalEntry>(predicate: predicate, sortBy: [.init(\.date)])
+        
+        do {
+            if let journalEntry = try modelContext.fetch(descriptor).first {
+                // JournalEntry의 answer를 originalText로 사용
+                state.originalText = journalEntry.answer.isEmpty ? state.originalText : journalEntry.answer
+            }
+        } catch {
+            print("JournalEntry fetch error: \(error)")
+        }
     }
     
     // MARK: - Intent

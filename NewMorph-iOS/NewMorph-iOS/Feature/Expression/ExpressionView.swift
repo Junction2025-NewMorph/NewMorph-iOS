@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ExpressionView: View {
     @StateObject private var viewModel: ExpressionViewModel
+    @Environment(\.modelContext) private var modelContext
     
     init(viewModel: ExpressionViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -106,6 +108,7 @@ struct ExpressionView: View {
         }
         .navigationBarHidden(true)
         .task {
+            viewModel.loadJournalEntry(modelContext: modelContext)
             await viewModel.generateExpressions()
         }
     }
@@ -113,7 +116,11 @@ struct ExpressionView: View {
 
 #Preview {
     let container = AppContainer.mock()
-    let viewModel = ExpressionViewModel(useCase: container.normalizeEnglishUseCase)
+    let viewModel = ExpressionViewModel(
+        useCase: container.normalizeEnglishUseCase,
+        targetDate: Date()
+    )
     
     ExpressionView(viewModel: viewModel)
+        .modelContainer(try! ModelContainer(for: JournalEntry.self))
 }

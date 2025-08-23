@@ -285,7 +285,7 @@ struct ConnectedExpressionView: View {
 #Preview {
     let speakingResultVM = SpeakingResultViewModel()
     let container = AppContainer.mock()
-    let expressionVM = ExpressionViewModel(useCase: container.normalizeEnglishUseCase)
+    let expressionVM = ExpressionViewModel(useCase: container.normalizeEnglishUseCase, targetDate: Date())
     
     SpeakingResultView(viewModel: speakingResultVM, expressionViewModel: expressionVM)
 }
