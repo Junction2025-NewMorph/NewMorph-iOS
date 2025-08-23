@@ -16,7 +16,7 @@ struct QuetionView: View {
             QuestionViewTitle(qustionTitle: entry?.prompt ?? "")
                 .padding(.top, 20)
 
-            QuestionViewCard(entry: entry)
+            QuestionViewCard(entry: entry ?? JournalEntry(date: Date(), prompt: "", answer: ""))
         }
         .overlay(alignment: .bottom) {
             if !hasAnswer {

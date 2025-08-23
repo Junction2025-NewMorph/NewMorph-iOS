@@ -40,6 +40,7 @@ struct HomeView: View {
             )
 
             QuestionViewDateBar(
+                subscene: $subscene,
                 currentDate: $currentDate,
                 day: .constant(Calendar.current.component(.day, from: currentDate)),
                 month: month
@@ -68,13 +69,12 @@ struct HomeView: View {
             }
             .padding(.horizontal, 20)
             .animation(.snappy, value: subscene)
-        }
-        .background(.nmBackground1Main)
-        .safeAreaInset(edge: .bottom) {
+            
             if hasAnswer {
                 NMButton(action: { router.push(.result) }, title: "Done")
             }
         }
+        .background(.nmBackground1Main)
         .onAppear {
             let day = Calendar.current.component(.day, from: Date())
             currentDate = month.date(day: day)
@@ -87,6 +87,7 @@ struct HomeView: View {
             VoiceInputView { text in
                 upsertEntry(for: currentDate, answer: text)
                 loadEntry(for: currentDate)
+                triggerHapticFeedback()
                 withAnimation { isSheetPresented = false }
             }
         }
