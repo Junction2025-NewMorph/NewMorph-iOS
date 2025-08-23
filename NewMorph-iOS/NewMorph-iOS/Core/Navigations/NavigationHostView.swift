@@ -24,6 +24,8 @@ struct NavigationHostView: View {
         switch route {
         case .home:
             ContentView()
+        case .voiceInput:
+            VoiceInputView()
         }
     }
 }
