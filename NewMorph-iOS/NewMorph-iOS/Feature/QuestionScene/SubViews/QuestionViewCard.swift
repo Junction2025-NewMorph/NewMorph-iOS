@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct QuestionViewCard: View {
-    let entry: JournalEntry?
+    @Bindable var entry: JournalEntry
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -17,7 +17,7 @@ struct QuestionViewCard: View {
                 .fill(.nmBackground2Modal)
                 .shadow(color: .black.opacity(0.06), radius: 14, x: 0, y: 0)
                 .overlay(alignment: .center) {
-                    DayEntryView(entry: entry)
+                    DayEntryView(text: $entry.answer)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
 
@@ -30,25 +30,24 @@ struct QuestionViewCard: View {
 }
 
 struct DayEntryView: View {
-    let entry: JournalEntry?
-
+    @Binding var text: String
+    
     var body: some View {
-        if let entry, !entry.answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            ScrollView {
-                Text(entry.answer)
-                    .font(.custom(FontName.pretendardRegular.rawValue, size: 16))
-                    .foregroundStyle(.nmGrayscale2)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, 68)
-                    .padding(.bottom, 20)
-                    .padding(.horizontal, 28)
-            }
-            .scrollIndicators(.hidden)
-        } else {
+        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             Text("Just Blahblah your reply")
                 .font(.custom(FontName.pretendardMedium.rawValue, size: 18))
                 .foregroundStyle(.nmGrayscale4)
+        } else {
+            TextEditor(text: $text)
+                .font(.custom(FontName.pretendardRegular.rawValue, size: 16))
+                .foregroundStyle(.nmGrayscale2)
+                .padding(.top, 68)          
+                .padding(.bottom, 20)
+                .padding(.horizontal, 28)
+                .scrollContentBackground(.hidden)
+                .background(Color.clear)
+                .textInputAutocapitalization(.sentences)
+                .autocorrectionDisabled(false)
         }
     }
 }
