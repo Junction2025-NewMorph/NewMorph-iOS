@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import Observation
 
 @MainActor
 @Observable
 public final class NavigationRouter {
     public var path = NavigationPath()
+
+    public var pathBinding: Binding<NavigationPath> {
+        Binding(get: { self.path }, set: { self.path = $0 })
+    }
 
     public var sheet: AppSheet?
     public var fullScreen: AppFull?

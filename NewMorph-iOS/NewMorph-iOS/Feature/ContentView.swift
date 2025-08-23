@@ -15,7 +15,7 @@ struct ContentView: View {
     @Query private var items: [Item]
 
     var body: some View {
-        Text("Hello, World!")
+        Text("Hello, World!")        
     }
 }
 
