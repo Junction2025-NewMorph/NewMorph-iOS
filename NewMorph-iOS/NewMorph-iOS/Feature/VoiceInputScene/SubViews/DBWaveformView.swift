@@ -14,7 +14,6 @@ struct DBWaveformView: View {
         ZStack(alignment: .center) {
             GeometryReader { geo in
                 let slice = Array(levels.suffix(visibleBars))
-                let baselineY = geo.size.height / 2
 
                 HStack(alignment: .center, spacing: spacing) {
                     ForEach(slice.indices, id: \.self) { i in
@@ -35,16 +34,8 @@ struct DBWaveformView: View {
                 Rectangle()
                     .fill(Color(hue: 0.46, saturation: 0.74, brightness: 0.74))
                     .frame(width: 2)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.trailing, 14)
-
-                // 커서 끝 점
-                Circle()
-                    .fill(Color.primary.opacity(0.8))
-                    .frame(width: 6, height: 6)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.trailing, 16)
-                    .offset(y: 0)
             }
             .frame(height: 40)
         }

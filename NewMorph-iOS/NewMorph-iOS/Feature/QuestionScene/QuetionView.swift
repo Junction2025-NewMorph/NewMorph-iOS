@@ -1,10 +1,3 @@
-//
-//  QuetionView.swift
-//  NewMorph-iOS
-//
-//  Created by mini on 8/23/25.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -13,26 +6,26 @@ struct QuetionView: View {
     @Environment(\.modelContext) private var context
 
     @Bindable var viewModel = QuestionViewModel()
-    
+
     @State private var month = MonthContext(
         year: Calendar.current.component(.year, from: Date()),
         month: 8
     )
     @State private var day: Int = 23
     @State private var currentDate: Date = Date()
-    
+
     @State private var isSheetPresented: Bool = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             QuestionViewToolBar()
-            
+
             QuestionViewDateBar(
                 currentDate: $currentDate,
                 day: $day,
                 month: month
             )
-            
+
             ScrollView {
                 VStack(spacing: 16) {
                     QuestionViewTitle()
@@ -40,10 +33,9 @@ struct QuetionView: View {
                 }
                 .padding(.horizontal, 20)
             }
-            .contentShape(Rectangle())
-            
+
             Spacer(minLength: 12)
-            
+
             Button(action: { withAnimation { isSheetPresented = true } } ) {
                 Text("블라하기")
             }
@@ -54,7 +46,34 @@ struct QuetionView: View {
         }
         .animation(.snappy, value: currentDate)
         .nmSheet(isPresented: $isSheetPresented) {
-            VoiceInputView()
+            VoiceInputView { text in
+                upsertEntry(for: currentDate, answer: text)
+                withAnimation { isSheetPresented = false }
+            }
+        }
+    }
+
+    private func upsertEntry(for date: Date, answer: String) {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: date)
+        let end = cal.date(byAdding: .day, value: 1, to: start)!
+
+        let predicate = #Predicate<JournalEntry> { e in
+            e.date >= start && e.date < end
+        }
+        let desc = FetchDescriptor<JournalEntry>(predicate: predicate, sortBy: [.init(\.date)])
+        do {
+            if let existing = try context.fetch(desc).first {
+                print("😁", answer)
+
+                existing.answer = answer
+            } else {
+                let new = JournalEntry(date: date, prompt: "최근 유튜브?", answer: answer)
+                context.insert(new)
+            }
+            try context.save()
+        } catch {
+            print("SwiftData save error: \(error)")
         }
     }
 }
