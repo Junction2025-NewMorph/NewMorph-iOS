@@ -17,7 +17,7 @@ struct NMSheet<Content: View>: View {
     var body: some View {
         VStack(spacing: 0) {
             Capsule()
-                .fill(.gray)
+                .fill(.nmGrayscale4)
                 .frame(width: 40, height: 3)
                 .padding(.top, 8)
 
@@ -28,7 +28,7 @@ struct NMSheet<Content: View>: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(.white)
+                .fill(.nmBackground2Modal)
         )
     }
 }

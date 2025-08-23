@@ -22,7 +22,7 @@ struct NMSheetModifier<SheetContent: View>: ViewModifier {
             content
             
             if isPresented {
-                Color.sheetBackground
+                Color.black.opacity(0.6)
                     .ignoresSafeArea()
                     .onTapGesture {
                         withAnimation { isPresented = false }
