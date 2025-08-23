@@ -12,56 +12,59 @@ struct QuestionViewCard: View {
     @Binding var currentDate: Date
 
     var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "asterisk.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 86, height: 86)
-                .foregroundStyle(.black)
-                .padding(.top, 18)
-            
-            DayEntryView(date: currentDate)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 20)
+        ZStack(alignment: .top) {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(.nmBackground2Modal)
+                .shadow(
+                    color: .black.opacity(0.06),
+                    radius: 14,
+                    x: 0,
+                    y: 0
+                )
+                .overlay(alignment: .center) {
+                    DayEntryView(date: currentDate)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+
+            Image(.mainCharacterBasic)
+                .offset(y: -50)
         }
-        .frame(maxWidth: .infinity, alignment: .center)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(.white)
-                .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
-        )
-        .padding(.top, 8)
+        .padding(.top, 43)
+        .frame(maxWidth: .infinity)
     }
 }
 
 struct DayEntryView: View {
     @Environment(\.modelContext) private var context
     @Query private var entries: [JournalEntry]
-    
+
     init(date: Date) {
         let cal = Calendar.current
         let start = cal.startOfDay(for: date)
-        let end = cal.date(byAdding: .day, value: 1, to: start)!
+        let end   = cal.date(byAdding: .day, value: 1, to: start)!
         let predicate = #Predicate<JournalEntry> { e in
             e.date >= start && e.date < end
         }
         _entries = Query(filter: predicate, sort: \.date)
     }
-    
+
     var body: some View {
-        if let entry = entries.first {
-            VStack(alignment: .center, spacing: 8) {
-                Text(entry.answer.isEmpty ? "답변을 블라블라해보세요" : entry.answer)
-                    .font(.callout)
+        if let entry = entries.first, !entry.answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            ScrollView {
+                Text(entry.answer)
+                    .font(.custom(FontName.pretendardRegular.rawValue, size: 16))
+                    .foregroundStyle(.nmGrayscale2)
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(entry.answer.isEmpty ? .secondary : .primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 68)
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 28)
             }
-            .frame(maxWidth: .infinity)
+            .scrollIndicators(.hidden)
         } else {
-            Text("답변을 블라블라해보세요")
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .center)
+            Text("Just Blahblah your reply")
+                .font(.custom(FontName.pretendardMedium.rawValue, size: 18))
+                .foregroundStyle(.nmGrayscale4)
         }
     }
 }

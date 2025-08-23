@@ -18,29 +18,36 @@ struct QuetionView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            QuestionViewToolBar()
+            QuestionViewToolBar(
+                onCalenderTapped: { router.push(.calender) }
+            )
 
             QuestionViewDateBar(
                 currentDate: $currentDate,
                 day: $day,
                 month: month
             )
+            .padding(.top, 30)
 
-            ScrollView {
-                VStack(spacing: 16) {
-                    QuestionViewTitle()
-                    QuestionViewCard(currentDate: $currentDate)
-                }
-                .padding(.horizontal, 20)
+            VStack(spacing: 43) {
+                QuestionViewTitle(qustionTitle: "What’s the last\nTV show you watched?")
+                    .padding(.top, 20)
+                
+                QuestionViewCard(currentDate: $currentDate)
             }
-
-            Spacer(minLength: 12)
-
-            Button(action: { withAnimation { isSheetPresented = true } } ) {
-                Text("블라하기")
-            }
+            .padding(.horizontal, 20)
+            .ignoresSafeArea(.all)
         }
-        .background(Color(.systemGroupedBackground))
+        .background(.nmBackground1Main)
+        .overlay(alignment: .bottom) {
+            Button(
+                action: { withAnimation { isSheetPresented = true } }
+            ) {
+                Image(.imgMicButton)
+            }
+            .padding(.bottom, 28)
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
         .onAppear {
             currentDate = month.date(day: day)
         }
@@ -52,8 +59,10 @@ struct QuetionView: View {
             }
         }
     }
+}
 
-    private func upsertEntry(for date: Date, answer: String) {
+private extension QuetionView {
+    func upsertEntry(for date: Date, answer: String) {
         let cal = Calendar.current
         let start = cal.startOfDay(for: date)
         let end = cal.date(byAdding: .day, value: 1, to: start)!
@@ -64,8 +73,6 @@ struct QuetionView: View {
         let desc = FetchDescriptor<JournalEntry>(predicate: predicate, sortBy: [.init(\.date)])
         do {
             if let existing = try context.fetch(desc).first {
-                print("😁", answer)
-
                 existing.answer = answer
             } else {
                 let new = JournalEntry(date: date, prompt: "최근 유튜브?", answer: answer)
