@@ -14,7 +14,14 @@ struct QuetionView: View {
     @State private var day: Int = 23
     @State private var currentDate: Date = Date()
 
+    @State private var entry: JournalEntry?
     @State private var isSheetPresented: Bool = false
+    
+    private var hasAnswer: Bool {
+        guard let t = entry?.answer.trimmingCharacters(in: .whitespacesAndNewlines)
+        else { return false }
+        return !t.isEmpty
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -32,29 +39,42 @@ struct QuetionView: View {
             VStack(spacing: 43) {
                 QuestionViewTitle(qustionTitle: "What’s the last\nTV show you watched?")
                     .padding(.top, 20)
-                
-                QuestionViewCard(currentDate: $currentDate)
+
+                QuestionViewCard(entry: entry)
             }
             .padding(.horizontal, 20)
             .ignoresSafeArea(.all)
         }
         .background(.nmBackground1Main)
         .overlay(alignment: .bottom) {
-            Button(
-                action: { withAnimation { isSheetPresented = true } }
-            ) {
-                Image(.imgMicButton)
+            if !hasAnswer {
+                Button(action: { withAnimation { isSheetPresented = true } }) {
+                    Image(.imgMicButton)
+                }
+                .padding(.bottom, 28)
+                .frame(maxWidth: .infinity, alignment: .center)
             }
-            .padding(.bottom, 28)
-            .frame(maxWidth: .infinity, alignment: .center)
+        }
+        .safeAreaInset(edge: .bottom) {
+            if hasAnswer {
+                NMButton(
+                    action: { router.push(.result) },
+                    title: "Done"
+                )
+            }
         }
         .onAppear {
             currentDate = month.date(day: day)
+            loadEntry(for: currentDate)
+        }
+        .onChange(of: currentDate) { _, newDate in
+            loadEntry(for: newDate)         
         }
         .animation(.snappy, value: currentDate)
         .nmSheet(isPresented: $isSheetPresented) {
             VoiceInputView { text in
                 upsertEntry(for: currentDate, answer: text)
+                loadEntry(for: currentDate)
                 withAnimation { isSheetPresented = false }
             }
         }
@@ -62,21 +82,51 @@ struct QuetionView: View {
 }
 
 private extension QuetionView {
-    func upsertEntry(for date: Date, answer: String) {
+    
+    // MARK: - SwiftData 조회
+    private func loadEntry(for date: Date) {
         let cal = Calendar.current
         let start = cal.startOfDay(for: date)
-        let end = cal.date(byAdding: .day, value: 1, to: start)!
+        let end   = cal.date(byAdding: .day, value: 1, to: start)!
 
         let predicate = #Predicate<JournalEntry> { e in
             e.date >= start && e.date < end
         }
-        let desc = FetchDescriptor<JournalEntry>(predicate: predicate, sortBy: [.init(\.date)])
+        let desc = FetchDescriptor<JournalEntry>(
+            predicate: predicate,
+            sortBy: [.init(\.date)]
+        )
+
+        do {
+            entry = try context.fetch(desc).first
+        } catch {
+            print("SwiftData fetch error: \(error)")
+            entry = nil
+        }
+    }
+
+    // MARK: - SwiftData 저장 (Upsert)
+    private func upsertEntry(for date: Date, answer: String) {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: date)
+        let end   = cal.date(byAdding: .day, value: 1, to: start)!
+
+        let predicate = #Predicate<JournalEntry> { e in
+            e.date >= start && e.date < end
+        }
+        let desc = FetchDescriptor<JournalEntry>(
+            predicate: predicate,
+            sortBy: [.init(\.date)]
+        )
+
         do {
             if let existing = try context.fetch(desc).first {
                 existing.answer = answer
+                entry = existing                  // ← 즉시 반영
             } else {
                 let new = JournalEntry(date: date, prompt: "최근 유튜브?", answer: answer)
                 context.insert(new)
+                entry = new                       // ← 즉시 반영
             }
             try context.save()
         } catch {
