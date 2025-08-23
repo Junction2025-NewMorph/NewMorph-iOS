@@ -14,21 +14,23 @@ struct NMButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-//                .font(.titleSemiBold16)
-//                .padding(.vertical, 16)
-//                .frame(maxWidth: .infinity, maxHeight: 56)
-//                .foregroundStyle(.ffipBackground1Main)
-//                .background(.ffipGrayscale1)
-//                .cornerRadius(8)
+                .font(.custom(FontName.pretendardSemiBold.rawValue, size: 18))
+                .padding(.top, 19)
+                .padding(.bottom, 31)
+                .frame(maxWidth: .infinity, maxHeight: 77)
+                .foregroundStyle(.nmBackground1Main)
+                .background(.nmGrayscale1)
         }
-//        .padding(.horizontal, 20)
-//        .padding(.vertical, 12)
     }
 }
 
 #Preview {
-    NMButton(
-        action: {},
-        title: "우리가 우승 버튼"
-    )
+    VStack {
+        Spacer()
+        NMButton(
+            action: {},
+            title: "우리가 우승 버튼"
+        )
+    }
+    .ignoresSafeArea(.all)
 }

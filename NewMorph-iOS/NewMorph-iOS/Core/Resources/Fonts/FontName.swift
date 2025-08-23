@@ -18,6 +18,7 @@ enum FontName: String {
     case pretendardRegular = "Pretendard-Regular"
     case pretendardSemiBold = "Pretendard-SemiBold"
     case pretendardThin = "Pretendard-Thin"
+    case jejudoldam = "EF_jejudoldam"
 }
 
 extension Font {
