@@ -40,6 +40,7 @@ struct HomeView: View {
             )
 
             QuestionViewDateBar(
+                subscene: $subscene,
                 currentDate: $currentDate,
                 day: .constant(Calendar.current.component(.day, from: currentDate)),
                 month: month
@@ -87,6 +88,7 @@ struct HomeView: View {
             VoiceInputView { text in
                 upsertEntry(for: currentDate, answer: text)
                 loadEntry(for: currentDate)
+                triggerHapticFeedback()
                 withAnimation { isSheetPresented = false }
             }
         }

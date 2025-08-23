@@ -7,7 +7,7 @@ struct NMGaugeButton: View {
     @Binding var progress: Double
 
     private var cappedProgress: CGFloat { CGFloat(min(max(progress, 0), 1)) }
-    private var isEnabled: Bool { progress >= 1.0 - 0.0001 }
+    private var isEnabled: Bool { progress >= 1.0 }
 
     var body: some View {
         Button {
