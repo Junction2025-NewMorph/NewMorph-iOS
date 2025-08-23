@@ -31,10 +31,14 @@ public final class OpenAIResponsesClient: OpenAIClient {
                     content: EnglishStylePromptBuilder.user(mixedText)
                 ),
             ],
-            response_format: .init(
-                type: "json_schema",
-                json_schema: EnglishStylePromptBuilder.schema()
-            )
+            text: .init(
+                format: .init(
+                    type: "json_schema",
+                    name: "EnglishVariants",
+                    schema: EnglishStylePromptBuilder.schema().schema
+                )
+            ),
+            store: true
         )
 
         // POST /v1/responses
@@ -43,18 +47,23 @@ public final class OpenAIResponsesClient: OpenAIClient {
             body: req
         )
 
-        // Prefer output_text; fallback to output[].content[].text
-        let jsonString =
-            res.output_text
-            ?? res.output?
-            .compactMap { $0.content.first?.text }
-            .joined(separator: "\n")
-
-        guard let json = jsonString, let data = json.data(using: .utf8) else {
+        // Extract JSON from new response format
+        guard let firstOutput = res.output.first,
+              let firstContent = firstOutput.content.first,
+              firstContent.type == "output_text" else {
             throw NSError(
                 domain: "OpenAI",
                 code: -2,
-                userInfo: [NSLocalizedDescriptionKey: "No JSON in response"]
+                userInfo: [NSLocalizedDescriptionKey: "No output content in response"]
+            )
+        }
+        
+        let jsonString = firstContent.text
+        guard let data = jsonString.data(using: .utf8) else {
+            throw NSError(
+                domain: "OpenAI",
+                code: -2,
+                userInfo: [NSLocalizedDescriptionKey: "Failed to convert JSON string to data"]
             )
         }
 

@@ -31,7 +31,7 @@ final class DemoViewModel: ObservableObject {
         defer { state.isLoading = false }
 
         let result = try await useCase.execute(state.input)
-        state.variants = EnglishExpressionsMapper.map(from: state.input)
+        state.variants = EnglishExpressionsMapper.map(from: result)
         return result
     }
 

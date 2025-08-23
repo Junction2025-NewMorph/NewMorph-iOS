@@ -15,6 +15,10 @@ public final class NavigationRouter {
     public var sheet: AppSheet?
     public var fullScreen: AppFull?
 
+    public var pathBinding: Binding<NavigationPath> {
+        Binding(get: { self.path }, set: { self.path = $0 })
+    }
+
     public init() {}
 
     public func push(_ route: AppRoute) { path.append(route) }

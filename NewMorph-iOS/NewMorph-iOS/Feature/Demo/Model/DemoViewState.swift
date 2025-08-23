@@ -7,13 +7,15 @@
 import Foundation
 
 struct DemoViewState {
-    var input: String = "I went to New York 지하철, but 노선이 헷갈려서 I'm lost."
+    var input: String =
+        "I ate egg sandwich. I wanted 오므라이스 and 과일주스 but 시간 없어서 I can't eat."
     var variants: EnglishExpressions? = nil
     var isLoading: Bool = false
     var error: String? = nil
 }
 
 public struct EnglishExpressions: Decodable {
+    public let natural: String
     public let friend: String
     public let family: String
     public let third: String  // (auto) formal or meme/humor

@@ -30,12 +30,18 @@ public final class AppContainer {
 
     /// 미리보기/테스트용 목업을 쓰고 싶으면 별도 init 추가 가능
     public static func mock(
-        friend: String = "yo",
-        family: String = "hi fam",
-        third: String = "formal or meme"
+        friend: String =
+            "I ended up with an egg sandwich, lol. I totally wanted some omurice and fruit juice, but I was out of time!",
+        family: String =
+            "I ate an egg sandwich because I didn't have enough time to enjoy the omurice and fruit juice I wanted.",
+        third: String =
+            "I grabbed an egg sandwich since I was out of time for the omurice and fruit juice I really wanted!",
+        natural: String =
+            "I had an egg sandwich because I didn't have time to eat the omurice and fruit juice I wanted."
     ) -> AppContainer {
         let mockClient = MockOpenAIClient(
             result: EnglishVariants(
+                natural: natural,
                 friend: friend,
                 family: family,
                 third: third

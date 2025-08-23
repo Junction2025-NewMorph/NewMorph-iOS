@@ -14,9 +14,10 @@ struct ResponsesRequest: Encodable {
         let role: String  // "system", "user"
         let content: String
     }
-    struct ResponseFormat: Encodable {
-        let type: String  // "json_schema"
-        let json_schema: JSONSchema
+    struct TextFormat: Encodable {
+        let type: String  // "json_schema" 
+        let name: String? // Required for json_schema
+        let schema: JSONSchema.Schema? // Direct schema, not nested in json_schema
     }
     struct JSONSchema: Encodable {
         let name: String
@@ -32,29 +33,44 @@ struct ResponsesRequest: Encodable {
             let additionalProperties: Bool
         }
     }
+    struct Text: Encodable {
+        let format: TextFormat
+    }
 
     let model: String
     let input: [Input]
-    let response_format: ResponseFormat
+    let text: Text
+    let store: Bool?
 }
 
 // MARK: - Success Response
 
 struct ResponsesSuccess: Decodable {
-    let output_text: String?  // some models/SDKs expose concatenated text here
-    struct OutputItem: Decodable {
-        struct Content: Decodable {
-            let type: String
-            let text: String?
-        }
+    let id: String
+    let object: String
+    let created_at: Int
+    let status: String
+    let model: String
+    let output: [OutputMessage]
+    
+    struct OutputMessage: Decodable {
+        let type: String  // "message"
+        let id: String
+        let status: String
+        let role: String  // "assistant"
         let content: [Content]
     }
-    let output: [OutputItem]?
+    
+    struct Content: Decodable {
+        let type: String  // "output_text"
+        let text: String
+    }
 }
 
 // MARK: - Domain decoding target
 
 public struct EnglishVariants: Decodable {
+    public let natural: String
     public let friend: String
     public let family: String
     public let third: String  // (auto) formal or meme/humor

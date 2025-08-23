@@ -12,6 +12,7 @@ public struct NetworkConfig {
     public let apiKey: String
     public let timeout: TimeInterval
     public init(baseURL: URL, apiKey: String, timeout: TimeInterval = 30) {
+        print("baseURL : \(baseURL)")
         self.baseURL = baseURL
         self.apiKey = apiKey
         self.timeout = timeout

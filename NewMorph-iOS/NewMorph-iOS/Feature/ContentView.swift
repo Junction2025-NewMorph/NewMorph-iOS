@@ -15,7 +15,13 @@ struct ContentView: View {
     @Query private var items: [Item]
 
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            Text("Hello, World!")
+            
+            Button("Go to Demo") {
+                router.push(.demo)
+            }
+        }
     }
 }
 

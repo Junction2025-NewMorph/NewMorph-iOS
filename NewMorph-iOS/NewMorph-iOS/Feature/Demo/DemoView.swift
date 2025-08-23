@@ -100,7 +100,8 @@ struct DemoView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("변환 결과")
                     .font(.headline)
-
+                
+                resultRow(title: "자연스러운 문장", value: variants.natural)
                 resultRow(title: "친구/DM", value: variants.friend)
                 resultRow(title: "가족/지인", value: variants.family)
                 resultRow(

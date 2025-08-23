@@ -12,7 +12,7 @@ struct NavigationHostView: View {
     @Environment(AppContainer.self) private var container
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: router.pathBinding) {
             ContentView()
                 .navigationDestination(for: AppRoute.self) { route in
                     destinationView(for: route)
@@ -34,4 +34,5 @@ struct NavigationHostView: View {
 
 #Preview {
     NavigationHostView()
+        .environment(NavigationRouter())
 }
