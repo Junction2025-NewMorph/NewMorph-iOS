@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct QuestionViewToolBar: View {
-    let onCalenderTapped: () -> Void
+    @Binding var subscene: Subscene
+
+    let onTapped: () -> Void
     
     var body: some View {
         HStack {
@@ -17,17 +19,13 @@ struct QuestionViewToolBar: View {
             Spacer()
             
             Button {
-                onCalenderTapped()
+                onTapped()
             } label: {
-                Image(.icnCalender)
+                Image(subscene == .question ? .icnCalender : .icnHome)
             }
             .buttonStyle(.plain)
         }
         .padding(.horizontal, 20)
         .padding(.top, 12)
     }
-}
-
-#Preview {
-    QuestionViewToolBar(onCalenderTapped: {})
 }

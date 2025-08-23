@@ -13,7 +13,7 @@ struct NavigationHostView: View {
 
     var body: some View {
         NavigationStack(path: router.pathBinding) {
-            QuetionView()
+            HomeView()
                 .navigationDestination(for: AppRoute.self) { route in
                     destinationView(for: route)
                 }
@@ -23,11 +23,13 @@ struct NavigationHostView: View {
     @ViewBuilder
     private func destinationView(for route: AppRoute) -> some View {
         switch route {
+        case .home:
+            HomeView()
         case .demo:
             let viewModel = DemoViewModel(useCase: container.normalizeEnglishUseCase)
             DemoView(viewModel: viewModel)
         case .question:
-            QuetionView()
+            QuetionView(entry: nil, onMicTapped: {})
         case .calender:
             CalenderView()
         case .result:
