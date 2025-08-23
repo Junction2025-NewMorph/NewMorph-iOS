@@ -276,6 +276,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NewMorph-iOS/Info.plist";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Our app needs access to your microphone so you can speak your search.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Our app uses speech recognition to turn your voice into text within the app.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -311,6 +313,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NewMorph-iOS/Info.plist";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Our app needs access to your microphone so you can speak your search.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Our app uses speech recognition to turn your voice into text within the app.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
