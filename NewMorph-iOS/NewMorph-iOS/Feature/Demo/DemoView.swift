@@ -135,5 +135,5 @@ extension View {
 
 #Preview {
     let container = AppContainer.mock()
-    return DemoView(viewModel: DemoViewModel(useCase: container.useCase))
+    return DemoView(viewModel: DemoViewModel(useCase: container.normalizeEnglishUseCase))
 }

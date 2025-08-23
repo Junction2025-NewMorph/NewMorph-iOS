@@ -8,7 +8,7 @@ import Foundation
 
 struct DemoViewState {
     var input: String =
-        "I ate egg sandwich. I wanted 오므라이스 and 과일주스 but 시간 없어서 I can't eat."
+        "I always watch bro라고 말하는 고양이 again and again."
     var variants: EnglishExpressions? = nil
     var isLoading: Bool = false
     var error: String? = nil

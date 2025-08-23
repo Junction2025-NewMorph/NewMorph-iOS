@@ -26,7 +26,7 @@ struct NavigationHostView: View {
         case .home:
             ContentView()
         case .demo:
-            let viewModel = DemoViewModel(useCase: container.useCase)
+            let viewModel = DemoViewModel(useCase: container.normalizeEnglishUseCase)
             DemoView(viewModel: viewModel)
         }
     }

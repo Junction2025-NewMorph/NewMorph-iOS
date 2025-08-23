@@ -11,7 +11,8 @@ import Foundation
 @MainActor
 @Observable
 public final class AppContainer {
-    public let useCase: NormalizeEnglishUseCase
+    public let normalizeEnglishUseCase: NormalizeEnglishUseCase
+    public var getRandomQuestionUseCase: GetRandomQuestionUseCase
 
     public init() {
         // 1) Config → Network → HTTP → OpenAIClient → UseCase
@@ -25,7 +26,8 @@ public final class AppContainer {
             model: Config.openAIModel
         )
 
-        self.useCase = NormalizeEnglishUseCase(client: client)
+        self.normalizeEnglishUseCase = NormalizeEnglishUseCase(client: client)
+        self.getRandomQuestionUseCase = GetRandomQuestionUseCase(repository: MockQuestionsRepository())
     }
 
     /// 미리보기/테스트용 목업을 쓰고 싶으면 별도 init 추가 가능
@@ -54,7 +56,8 @@ public final class AppContainer {
 
     // 내부 전용 편의 이니셜라이저
     private init(mockUseCase: NormalizeEnglishUseCase) {
-        self.useCase = mockUseCase
+        self.normalizeEnglishUseCase = mockUseCase
+        self.getRandomQuestionUseCase = GetRandomQuestionUseCase(repository: MockQuestionsRepository())
     }
 }
 
