@@ -11,8 +11,8 @@ struct NavigationHostView: View {
     @Environment(NavigationRouter.self) private var router
 
     var body: some View {
-        NavigationStack {
-            ContentView()
+        NavigationStack(path: router.pathBinding) {
+            QuetionView()
                 .navigationDestination(for: AppRoute.self) { route in
                     destinationView(for: route)
                 }
@@ -22,10 +22,12 @@ struct NavigationHostView: View {
     @ViewBuilder
     private func destinationView(for route: AppRoute) -> some View {
         switch route {
-        case .home:
-            ContentView()
-        case .voiceInput:
-            VoiceInputView()
+        case .question:
+            QuetionView()
+        case .calender:
+            CalenderView()
+        case .result:
+            ResultView()
         }
     }
 }
