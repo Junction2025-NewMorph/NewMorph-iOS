@@ -11,7 +11,7 @@ public enum AppRoute: Hashable {
     case home
     case demo
     case expression(date: Date = Date())
-    case speakingResult
+    case speakingResult(date: Date = Date())
     case question
     case calender
     case result(date: Date = Date())

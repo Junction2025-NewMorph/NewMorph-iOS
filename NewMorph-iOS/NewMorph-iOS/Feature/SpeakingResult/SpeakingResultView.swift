@@ -58,7 +58,7 @@ struct SpeakingResultView: View {
             topSection
             
             // Main content
-            VStack(spacing: 32) {
+            VStack(spacing: 24) {
                 // Rising score notification
                 if viewModel.state.isFillingScoreRising {
                     risingScoreNotification
@@ -73,55 +73,33 @@ struct SpeakingResultView: View {
                 Spacer()
             }
             .padding(.horizontal, 20)
-            .padding(.top, 20)
+            .padding(.top, 24)
         }
-        .background(Color(.systemBackground))
+        .background(Color(.nmBackgroundResult))
     }
     
     private var topSection: some View {
         VStack(spacing: 16) {
-            // Status bar area (simulated)
+            // Centered title with home icon
             HStack {
-                Text("9:41")
-                    .font(.system(.body, design: .monospaced))
+                Button(action: {}) {
+                    Image("icn_home")
+                        .font(.title2)
+                        .foregroundColor(.primary)
+                }
+                
+                Spacer()
+                
+                Text("결과 보기")
+                    .font(.headline)
                     .fontWeight(.semibold)
                 
                 Spacer()
                 
-                HStack(spacing: 4) {
-                    // Signal bars
-                    ForEach(0..<4) { index in
-                        RoundedRectangle(cornerRadius: 1)
-                            .frame(width: 3, height: CGFloat(4 + index * 2))
-                            .foregroundColor(.primary)
-                    }
-                    
-                    // WiFi icon
-                    Image(systemName: "wifi")
-                        .font(.caption)
-                    
-                    // Battery
-                    RoundedRectangle(cornerRadius: 2)
-                        .frame(width: 24, height: 12)
-                        .foregroundColor(.primary)
-                }
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 10)
-            
-            // Date and home icon
-            HStack {
-                Text(viewModel.state.currentDate)
-                    .font(.title3)
-                    .fontWeight(.medium)
-                
-                Spacer()
-                
-                Button(action: {}) {
-                    Image(systemName: "house.fill")
-                        .font(.title2)
-                        .foregroundColor(.primary)
-                }
+                // Invisible spacer to balance the home icon
+                Image("icn_home")
+                    .font(.title2)
+                    .foregroundColor(.clear)
             }
             .padding(.horizontal, 20)
         }
@@ -129,9 +107,9 @@ struct SpeakingResultView: View {
     
     private var risingScoreNotification: some View {
         HStack {
-            Image(systemName: "chart.line.uptrend.xyaxis")
+            Image("icn_trending_up")
                 .font(.title3)
-                .foregroundColor(.green)
+                .foregroundColor(Color("nmPointGreen1"))
             
             Text("Filling Score is on the rise!")
                 .font(.body)
@@ -143,12 +121,12 @@ struct SpeakingResultView: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.green.opacity(0.1))
+                .fill(Color("nmPointGreen1").opacity(0.1))
         )
     }
     
     private var scoreCardsSection: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             ScoreCard(scoreData: viewModel.state.feelingScore)
             ScoreCard(scoreData: viewModel.state.fillingScore)
         }
@@ -278,7 +256,7 @@ struct ConnectedExpressionView: View {
                 }
             }
         }
-        .background(Color(.systemBackground))
+        .background(Color(.nmBackgroundResult))
     }
 }
 

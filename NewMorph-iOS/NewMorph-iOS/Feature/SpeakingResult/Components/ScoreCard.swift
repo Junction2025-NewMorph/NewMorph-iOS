@@ -26,20 +26,18 @@ struct ScoreCard: View {
             }
             
             // Score and chart
-            HStack {
+            HStack(alignment: .bottom, spacing: 20) {
                 // Score number
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(alignment: .firstTextBaseline, spacing: 2) {
-                        Text("\(scoreData.score)")
-                            .font(.system(size: 48, weight: .bold))
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("\(scoreData.score)")
+                        .font(.system(size: 44, weight: .semibold))
+                        .foregroundColor(colorForType(.primary))
+
+                    if scoreData.chartType == .arc {
+                        Text("%")
+                            .font(.title3)
+                            .fontWeight(.semibold)
                             .foregroundColor(colorForType(.primary))
-                        
-                        if scoreData.chartType == .arc {
-                            Text("%")
-                                .font(.title2)
-                                .fontWeight(.medium)
-                                .foregroundColor(colorForType(.primary))
-                        }
                     }
                 }
                 
@@ -48,11 +46,31 @@ struct ScoreCard: View {
                 // Chart
                 chartView
             }
+            
+            // Detail scores
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(scoreData.details.indices, id: \.self) { index in
+                    let detail = scoreData.details[index]
+                    HStack {
+                        Text(detail.category)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                        
+                        Text("\(detail.score)")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.primary)
+                    }
+                }
+            }
         }
         .padding(24)
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color(.systemGray6))
+                .fill(Color(.white))
+                .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 2)
         )
     }
     
@@ -60,20 +78,22 @@ struct ScoreCard: View {
     private var chartView: some View {
         switch scoreData.chartType {
         case .line:
-            LineChartView()
-                .frame(width: 80, height: 40)
+            LineChartView(strokeColor: colorForType(.primary))
+                .frame(width: 180, height: 90)
         case .arc:
-            ArcChartView(percentage: scoreData.score)
-                .frame(width: 60, height: 60)
+            SemiCircularGauge(value: Double(scoreData.score), color: colorForType(.primary))
+                .frame(width: 150, height: 90)
+                .scaleEffect(x: 1, y: -1)
+                .offset(y: 80)
         }
     }
     
     private func colorForType(_ type: ColorType) -> Color {
         switch scoreData.color {
         case .green:
-            return type == .primary ? .green : .mint
+            return type == .primary ? Color("nmPointGreen1") : Color("nmPointGreen5")
         case .blue:
-            return type == .primary ? .blue : .cyan
+            return type == .primary ? Color("nmBlue") : Color("nmGrayscale5")
         }
     }
     
@@ -83,42 +103,86 @@ struct ScoreCard: View {
 }
 
 struct LineChartView: View {
+    var strokeColor: Color = Color("nmPointGreen1")
     var body: some View {
-        Path { path in
-            // 간단한 상승 곡선
-            path.move(to: CGPoint(x: 0, y: 30))
-            path.addCurve(
-                to: CGPoint(x: 80, y: 5),
-                control1: CGPoint(x: 30, y: 35),
-                control2: CGPoint(x: 50, y: 15)
-            )
+        GeometryReader { geo in
+            let w = geo.size.width
+            let h = geo.size.height
+            // Preset normalized points (0~1) for gentle rising curve
+            let points: [CGFloat] = [0.18, 0.22, 0.20, 0.34, 0.60, 0.78, 0.86]
+            Path { path in
+                for (i, v) in points.enumerated() {
+                    let x = CGFloat(i) / CGFloat(points.count - 1) * w
+                    let y = h - v * h
+                    if i == 0 { path.move(to: CGPoint(x: x, y: y)) }
+                    else { path.addLine(to: CGPoint(x: x, y: y)) }
+                }
+            }
+            .stroke(strokeColor, style: StrokeStyle(lineWidth: 6, lineCap: .round, lineJoin: .round))
         }
-        .stroke(Color.green, lineWidth: 3)
-        .clipped()
     }
 }
 
-struct ArcChartView: View {
-    let percentage: Int
-    
+// MARK: - Semi-circular gauge (animated, tire style)
+struct SemiCircularGauge: View {
+    var value: Double   // 0...100
+    var lineWidth: CGFloat = 12
+    var color: Color = Color("nmBlue")
+    var track: Color = Color.gray.opacity(0.15)
+
+    @State private var anim: CGFloat = 0
+
     var body: some View {
         ZStack {
-            // Background arc
-            Circle()
-                .stroke(
-                    Color.blue.opacity(0.2),
-                    lineWidth: 6
-                )
-            
-            // Progress arc
-            Circle()
-                .trim(from: 0, to: CGFloat(percentage) / 100.0 * 0.75) // 75% of circle
-                .stroke(
-                    Color.blue,
-                    style: StrokeStyle(lineWidth: 6, lineCap: .round)
-                )
-                .rotationEffect(.degrees(-90))
+            TopSemiCircleTrack()
+                .stroke(track, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+
+            TopSemiCircleProgress(progress: anim)
+                .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
         }
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.8)) {
+                anim = CGFloat(max(0, min(1, value/100)))
+            }
+        }
+        .onChange(of: value) { _, v in
+            withAnimation(.easeOut(duration: 0.6)) {
+                anim = CGFloat(max(0, min(1, v/100)))
+            }
+        }
+    }
+}
+
+// Shapes that compute center/radius from rect → avoids clipping/offset issues
+private struct TopSemiCircleTrack: Shape {
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        let lineInset: CGFloat = 0
+        let radius = min(rect.width/2, rect.height) - lineInset
+        let center = CGPoint(x: rect.midX, y: rect.minY + (min(rect.width/2, rect.height) - lineInset))
+        p.addArc(center: center,
+                 radius: radius,
+                 startAngle: .degrees(180),
+                 endAngle: .degrees(0),
+                 clockwise: true)
+        return p
+    }
+}
+
+private struct TopSemiCircleProgress: Shape {
+    var progress: CGFloat // 0...1
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        let lineInset: CGFloat = 0
+        let radius = min(rect.width/2, rect.height) - lineInset
+        let center = CGPoint(x: rect.midX, y: rect.minY + (min(rect.width/2, rect.height) - lineInset))
+        let end = 180 - 180 * max(0, min(1, progress))
+        p.addArc(center: center,
+                 radius: radius,
+                 startAngle: .degrees(180),
+                 endAngle: .degrees(end),
+                 clockwise: true)
+        return p
     }
 }
 
@@ -129,7 +193,8 @@ struct ArcChartView: View {
             subtitle: "Points for speaking freely and confidently.",
             score: 85,
             color: .green,
-            chartType: .line
+            chartType: .line,
+            details: []
         ))
         
         ScoreCard(scoreData: ScoreData(
@@ -137,7 +202,8 @@ struct ArcChartView: View {
             subtitle: "Points for accuracy of the sentences.",
             score: 67,
             color: .blue,
-            chartType: .arc
+            chartType: .arc,
+            details: []
         ))
     }
     .padding()

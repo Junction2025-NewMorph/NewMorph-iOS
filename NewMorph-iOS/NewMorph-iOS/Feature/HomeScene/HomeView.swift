@@ -72,7 +72,7 @@ struct HomeView: View {
             .animation(.snappy, value: subscene)
             
             if hasAnswer {
-                NMButton(action: { router.push(.result(date: currentDate)) }, title: "Done")
+                NMButton(action: { router.push(.speakingResult(date: currentDate)) }, title: "Done")
             }
         }
         .background(.nmBackground1Main)

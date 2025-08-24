@@ -14,14 +14,24 @@ struct SpeakingResultViewState {
         subtitle: "Points for speaking freely and confidently.",
         score: 85,
         color: .green,
-        chartType: .line
+        chartType: .line,
+        details: [
+            DetailScore(category: "Natural flow", score: 90),
+            DetailScore(category: "Confidence", score: 80),
+            DetailScore(category: "Engagement", score: 85)
+        ]
     )
     var fillingScore: ScoreData = ScoreData(
         title: "Filling Score", 
         subtitle: "Points for accuracy of the sentences.",
         score: 67,
         color: .blue,
-        chartType: .arc
+        chartType: .arc,
+        details: [
+            DetailScore(category: "Grammar", score: 70),
+            DetailScore(category: "Vocabulary", score: 65),
+            DetailScore(category: "Pronunciation", score: 66)
+        ]
     )
     var isFillingScoreRising: Bool = true
     var scrollOffset: CGFloat = 0
@@ -33,6 +43,12 @@ struct ScoreData {
     let score: Int
     let color: ScoreColor
     let chartType: ChartType
+    let details: [DetailScore]
+}
+
+struct DetailScore {
+    let category: String
+    let score: Int
 }
 
 enum ScoreColor {

@@ -34,11 +34,11 @@ struct NavigationHostView: View {
                 targetDate: date
             )
             ExpressionView(viewModel: viewModel)
-        case .speakingResult:
+        case .speakingResult(let date):
             let speakingResultVM = SpeakingResultViewModel()
             let expressionVM = ExpressionViewModel(
                 useCase: container.normalizeEnglishUseCase,
-                targetDate: Date()
+                targetDate: date
             )
             ScrollableSpeakingResultView(speakingResultViewModel: speakingResultVM, expressionViewModel: expressionVM)
         case .question:

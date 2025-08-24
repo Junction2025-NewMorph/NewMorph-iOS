@@ -35,29 +35,11 @@ struct ExpressionCard: View {
     let action: () -> Void
     
     var backgroundColor: Color {
-        switch mode {
-        case .natural:
-            return Color.blue.opacity(0.1)
-        case .friends:
-            return Color.green.opacity(0.1)
-        case .family:
-            return Color.purple.opacity(0.1)
-        case .formal:
-            return Color.gray.opacity(0.1)
-        }
+        return Color.white
     }
     
     var buttonColor: Color {
-        switch mode {
-        case .natural:
-            return Color.blue
-        case .friends:
-            return Color.green
-        case .family:
-            return Color.purple
-        case .formal:
-            return Color.gray
-        }
+        return Color(.nmPointGreen1)
     }
     
     var body: some View {
@@ -89,10 +71,10 @@ struct ExpressionCard: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(backgroundColor)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(isSelected ? buttonColor : Color.clear, lineWidth: 2)
-                )
+//                .overlay(
+//                    RoundedRectangle(cornerRadius: 16)
+//                        .stroke(isSelected ? buttonColor : Color.clear, lineWidth: 2)
+//                )
         )
         .onTapGesture {
             action()

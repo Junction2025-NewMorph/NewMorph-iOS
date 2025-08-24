@@ -40,7 +40,8 @@ final class SpeakingResultViewModel: ObservableObject {
             subtitle: "Points for speaking freely and confidently.",
             score: 85,
             color: .green,
-            chartType: .line
+            chartType: .line,
+            details: []
         )
         
         state.fillingScore = ScoreData(
@@ -48,7 +49,8 @@ final class SpeakingResultViewModel: ObservableObject {
             subtitle: "Points for accuracy of the sentences.",
             score: 67,
             color: .blue,
-            chartType: .arc
+            chartType: .arc,
+            details: []
         )
         
         state.isFillingScoreRising = true

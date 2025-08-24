@@ -36,50 +36,52 @@ struct ExpressionView: View {
                 
                 // Main content
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        
-                        // Original text section
-                        VStack(alignment: .leading, spacing: 12) {
+                    VStack(spacing: 20) {
+                        // Main content card
+                        VStack(alignment: .leading, spacing: 16) {
+                            // Original text section
                             Text(viewModel.state.originalText)
-                                .font(.title3)
-                                .fontWeight(.medium)
+                                .font(.title2)
+                                .fontWeight(.semibold)
                                 .foregroundColor(.primary)
                                 .multilineTextAlignment(.leading)
-                                .padding(.horizontal, 20)
-                            
-                            // Translated text box
-                            VStack(alignment: .leading, spacing: 8) {
-                                Rectangle()
-                                    .fill(Color(.systemGray6))
-                                    .frame(height: 4)
-                                    .padding(.leading, 20)
-                                
-                                Text(viewModel.state.translatedText)
-                                    .font(.body)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.leading)
-                                    .padding(.horizontal, 20)
-                                    .padding(.vertical, 12)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(Color(.systemGray6))
-                                    )
-                                    .padding(.horizontal, 20)
-                            }
+                                .lineSpacing(4)
+
+                            // Thin divider under the original text
+                            Rectangle()
+                                .fill(Color("nmGrayscale4").opacity(0.35))
+                                .frame(height: 1)
+                                .padding(.vertical, 2)
+
+                            // Translated text box (rounded light background inside card)
+                            Text(viewModel.state.translatedText)
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.leading)
+                                .lineSpacing(2)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color("nmGrayscale5"))
+                                )
                         }
-                        .padding(.top, 30)
-                        
+                        .padding(20)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(.white)
+                                .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 2)
+                        )
+
                         // "In other cases" section
                         VStack(alignment: .leading, spacing: 16) {
                             Text("In other cases")
                                 .font(.title2)
                                 .fontWeight(.semibold)
-                                .padding(.horizontal, 20)
                             
                             // Horizontal scrolling cards
                             ExpressionCardsScrollView(viewModel: viewModel)
                         }
-                        .padding(.top, 40)
                         
                         Spacer(minLength: 100)
                     }
@@ -99,12 +101,12 @@ struct ExpressionView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 50)
-                            .background(Color.black)
+            .background(Color("nmGrayscale1"))
                             .cornerRadius(0)
                     }
                 }
             }
-            .background(Color(.systemBackground))
+            .background(Color(.nmBackgroundResult))
         }
         .navigationBarHidden(true)
         .task {
