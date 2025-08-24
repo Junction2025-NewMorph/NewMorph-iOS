@@ -102,4 +102,24 @@ final class ExpressionViewModel: ObservableObject {
             return expressions.third
         }
     }
+    
+    // MARK: - Text Comparison Methods
+    func updateCorrectText(_ text: String) {
+        state.correctText = text
+    }
+    
+    func updateUserSpeechText(_ text: String) {
+        state.userSpeechText = text
+    }
+    
+    func getHighlightedUserSpeech() -> AttributedString {
+        guard !state.userSpeechText.isEmpty, !state.correctText.isEmpty else {
+            return AttributedString(state.userSpeechText)
+        }
+        
+        return TextDiffUtility.highlightedUserAttributedText(
+            userText: state.userSpeechText,
+            correctText: state.correctText
+        )
+    }
 }

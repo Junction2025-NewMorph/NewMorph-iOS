@@ -62,10 +62,6 @@ struct HomeView: View {
                     
                     VStack {
                         Spacer()
-                        if hasAnswer && subscene == .question {
-                            NMButton(action: { router.push(.result) }, title: "Done")
-                                .ignoresSafeArea(.keyboard, edges: .bottom)
-                        }
                     }
                 }
 

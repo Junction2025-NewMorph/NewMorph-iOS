@@ -13,7 +13,7 @@ struct ExpressionCardsScrollView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(ExpressionMode.allCases, id: \.self) { mode in
+                ForEach(ExpressionMode.allCases.filter { $0 != .natural }, id: \.self) { mode in
                     ExpressionCard(
                         mode: mode,
                         expression: viewModel.getExpressionForMode(mode),
@@ -23,7 +23,7 @@ struct ExpressionCardsScrollView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
+//            .padding(.horizontal, 20)
         }
     }
 }

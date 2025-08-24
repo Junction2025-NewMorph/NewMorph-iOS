@@ -14,6 +14,8 @@ struct ExpressionViewState {
     var isLoading: Bool = false
     var error: String? = nil
     var selectedMode: ExpressionMode = .natural
+    var correctText: String = "" // OpenAI가 제공한 올바른 문장
+    var userSpeechText: String = "" // 사용자가 스피치한 문장
 }
 
 enum ExpressionMode: CaseIterable {

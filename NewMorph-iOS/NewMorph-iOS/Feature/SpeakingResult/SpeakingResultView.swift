@@ -20,8 +20,15 @@ struct SpeakingResultView: View {
     var body: some View {
         ZStack {
             if showExpression {
-                ExpressionView(viewModel: expressionViewModel)
-                    .transition(.move(edge: .bottom))
+                ExpressionView(viewModel: expressionViewModel) {
+                    showExpression = false
+                }
+                .transition(.move(edge: .bottom))
+                .onAppear {
+                    // 테스트용 데이터 설정 (실제 앱에서는 실제 데이터로 대체)
+                    expressionViewModel.updateUserSpeechText("I just finished Crash Landing on You. I liked it lot — some parts were kinda cringy, but overall it was super fun")
+                    expressionViewModel.updateCorrectText("I just finished Crash Landing on You. I liked it a lot — some parts were kinda cringy, but overall it was super fun")
+                }
             } else {
                 mainSpeakingResultView
                     .transition(.move(edge: .top))
@@ -149,119 +156,6 @@ struct SpeakingResultView: View {
     }
 }
 
-// Connected ExpressionView that can scroll back to SpeakingResult
-struct ConnectedExpressionView: View {
-    @StateObject private var expressionViewModel: ExpressionViewModel
-    @Binding var showSpeakingResult: Bool
-    
-    init(expressionViewModel: ExpressionViewModel, showSpeakingResult: Binding<Bool>) {
-        self._expressionViewModel = StateObject(wrappedValue: expressionViewModel)
-        self._showSpeakingResult = showSpeakingResult
-    }
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                VStack(spacing: 0) {
-                    // Invisible trigger area for SpeakingResult
-                    Color.clear
-                        .frame(height: 100)
-                        .onAppear {
-                            // Trigger when scrolled to top
-                        }
-                    
-                    // Expression content
-                    expressionContent
-                        .frame(minHeight: geometry.size.height)
-                }
-            }
-            .scrollIndicators(.hidden)
-        }
-    }
-    
-    private var expressionContent: some View {
-        VStack(spacing: 0) {
-            // Top navigation area
-            HStack {
-                Spacer()
-                Button(action: {
-                    showSpeakingResult = true
-                }) {
-                    Image(systemName: "chevron.up")
-                        .font(.title2)
-                        .foregroundColor(.primary)
-                }
-                Spacer()
-            }
-            .padding(.top, 10)
-            .padding(.horizontal, 20)
-            
-            // Expression content (reusing from ExpressionView)
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(expressionViewModel.state.originalText)
-                        .font(.title3)
-                        .fontWeight(.medium)
-                        .foregroundColor(.primary)
-                        .multilineTextAlignment(.leading)
-                        .padding(.horizontal, 20)
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Rectangle()
-                            .fill(Color(.systemGray6))
-                            .frame(height: 4)
-                            .padding(.leading, 20)
-                        
-                        Text(expressionViewModel.state.translatedText)
-                            .font(.body)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(.systemGray6))
-                            )
-                            .padding(.horizontal, 20)
-                    }
-                }
-                .padding(.top, 30)
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("In other cases")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding(.horizontal, 20)
-                    
-                    ExpressionCardsScrollView(viewModel: expressionViewModel)
-                }
-                .padding(.top, 40)
-                
-                Spacer(minLength: 100)
-            }
-            
-            // Bottom Save button
-            VStack(spacing: 0) {
-                Divider()
-                
-                Button(action: {
-                    Task {
-                        await expressionViewModel.saveExpression()
-                    }
-                }) {
-                    Text("Save")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.black)
-                        .cornerRadius(0)
-                }
-            }
-        }
-        .background(Color(.systemBackground))
-    }
-}
 
 #Preview {
     let speakingResultVM = SpeakingResultViewModel()
