@@ -47,24 +47,18 @@ struct ExpressionView: View {
                                 .multilineTextAlignment(.leading)
                                 .lineSpacing(4)
 
-                            // Thin divider under the original text
-                            Rectangle()
-                                .fill(Color("nmGrayscale4").opacity(0.35))
-                                .frame(height: 1)
-                                .padding(.vertical, 2)
+                            // Quoted translation block (left vertical line + text)
+                            HStack(alignment: .top, spacing: 12) {
+                                RoundedRectangle(cornerRadius: 1.5)
+                                    .fill(Color("nmGrayscale4").opacity(0.6))
+                                    .frame(width: 3)
 
-                            // Translated text box (rounded light background inside card)
-                            Text(viewModel.state.translatedText)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.leading)
-                                .lineSpacing(2)
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 12)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color("nmGrayscale5"))
-                                )
+                                Text(viewModel.state.translatedText)
+                                    .font(.body)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.leading)
+                                    .lineSpacing(3)
+                            }
                         }
                         .padding(20)
                         .background(
@@ -78,6 +72,7 @@ struct ExpressionView: View {
                             Text("In other cases")
                                 .font(.title2)
                                 .fontWeight(.semibold)
+                                .padding(.top, 4)
                             
                             // Horizontal scrolling cards
                             ExpressionCardsScrollView(viewModel: viewModel)
@@ -107,6 +102,7 @@ struct ExpressionView: View {
                 }
             }
             .background(Color(.nmBackgroundResult))
+            .ignoresSafeArea()
         }
         .navigationBarHidden(true)
         .task {

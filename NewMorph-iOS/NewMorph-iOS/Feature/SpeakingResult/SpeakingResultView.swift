@@ -27,6 +27,9 @@ struct SpeakingResultView: View {
                     .transition(.move(edge: .top))
             }
         }
+        .background(Color(.systemBackground))
+        .ignoresSafeArea()
+        .navigationBarBackButtonHidden(true)
         .animation(.easeInOut(duration: 0.3), value: showExpression)
     }
     
@@ -47,6 +50,7 @@ struct SpeakingResultView: View {
                             }
                     }
                 }
+                .background(Color.clear)
                 .scrollIndicators(.hidden)
             }
         }
@@ -75,7 +79,6 @@ struct SpeakingResultView: View {
             .padding(.horizontal, 20)
             .padding(.top, 24)
         }
-        .background(Color(.nmBackgroundResult))
     }
     
     private var topSection: some View {
@@ -256,7 +259,7 @@ struct ConnectedExpressionView: View {
                 }
             }
         }
-        .background(Color(.nmBackgroundResult))
+        .background(Color(.systemBackground))
     }
 }
 

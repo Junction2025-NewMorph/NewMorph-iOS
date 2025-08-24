@@ -41,6 +41,7 @@ struct ScrollableSpeakingResultView: View {
                             .id("expression")
                     }
                 }
+                .background(Color(.nmBackgroundResult))
                 .scrollIndicators(.hidden)
                 .background(
                     GeometryReader { geo in
@@ -65,6 +66,8 @@ struct ScrollableSpeakingResultView: View {
                 }
             }
         }
+        .background(Color(.nmBackgroundResult))
+//        .ignoresSafeArea()
         .task {
             await expressionViewModel.generateExpressions()
         }
@@ -93,7 +96,7 @@ struct ScrollableSpeakingResultView: View {
             .padding(.horizontal, 20)
             .padding(.top, 20)
         }
-        .background(Color(.systemBackground))
+        .background(Color.clear)
     }
 
     private var expressionSection: some View {
@@ -181,7 +184,7 @@ struct ScrollableSpeakingResultView: View {
                 }
             }
         }
-        .background(Color(.nmGrayscale4))
+        .background(Color(.nmBackgroundResult))
     }
 
     // MARK: - SpeakingResult Components
