@@ -54,23 +54,32 @@ struct HomeView: View {
                         entry: entry,
                         onMicTapped: { withAnimation { isSheetPresented = true } }
                     )
+                    .padding(.horizontal, 20)
                     .transition(.asymmetric(
                         insertion: .move(edge: .leading).combined(with: .opacity),
                         removal: .move(edge: .trailing).combined(with: .opacity)
                     ))
+                    
+                    VStack {
+                        Spacer()
+                        if hasAnswer && subscene == .question {
+                            NMButton(action: { router.push(.result) }, title: "Done")
+                                .ignoresSafeArea(.keyboard, edges: .bottom)
+                        }
+                    }
                 }
 
                 if subscene == .calendar {
                     CalenderView()
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .trailing).combined(with: .opacity),
-                        removal: .move(edge: .leading).combined(with: .opacity)
-                    ))
+                        .transition(
+                            .asymmetric(
+                                insertion: .move(edge: .trailing).combined(with: .opacity),
+                                removal: .move(edge: .leading).combined(with: .opacity)
+                            )
+                        )
                 }
             }
-            .padding(.horizontal, 20)
             .animation(.snappy, value: subscene)
-            
             if hasAnswer {
                 NMButton(action: { router.push(.speakingResult(date: currentDate)) }, title: "Done")
             }
@@ -151,4 +160,6 @@ private extension HomeView {
 
 #Preview {
     HomeView()
+        .environment(NavigationRouter())
+        .modelContainer(for: JournalEntry.self)
 }
