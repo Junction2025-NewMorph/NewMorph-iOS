@@ -70,11 +70,12 @@ struct HomeView: View {
 
                 if subscene == .calendar {
                     CalenderView()
-                        .padding(.horizontal, 20)
-                        .transition(.asymmetric(
-                        insertion: .move(edge: .trailing).combined(with: .opacity),
-                        removal: .move(edge: .leading).combined(with: .opacity)
-                    ))
+                        .transition(
+                            .asymmetric(
+                                insertion: .move(edge: .trailing).combined(with: .opacity),
+                                removal: .move(edge: .leading).combined(with: .opacity)
+                            )
+                        )
                 }
             }
             .animation(.snappy, value: subscene)
