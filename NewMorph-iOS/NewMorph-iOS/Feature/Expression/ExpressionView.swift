@@ -11,6 +11,7 @@ import SwiftData
 struct ExpressionView: View {
     @StateObject private var viewModel: ExpressionViewModel
     @Environment(\.modelContext) private var modelContext
+    @Environment(NavigationRouter.self) private var router
     var onClose: (() -> Void)?
     
     init(viewModel: ExpressionViewModel, onClose: (() -> Void)? = nil) {
@@ -126,6 +127,7 @@ struct ExpressionView: View {
             }
         }
     }
+    
 }
 
 #Preview {

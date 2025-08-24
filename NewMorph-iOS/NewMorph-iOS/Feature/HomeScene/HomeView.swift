@@ -80,6 +80,7 @@ struct HomeView: View {
                 NMButton(action: { router.push(.speakingResult(date: currentDate)) }, title: "Done")
             }
         }
+        .navigationBarHidden(true)
         .background(.nmBackground1Main)
         .onAppear {
             let day = Calendar.current.component(.day, from: Date())

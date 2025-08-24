@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ScrollableSpeakingResultView: View {
+    @Environment(NavigationRouter.self) private var router
     @StateObject private var speakingResultViewModel: SpeakingResultViewModel
     @StateObject private var expressionViewModel: ExpressionViewModel
     @State private var scrollOffset: CGFloat = 0
@@ -106,6 +107,88 @@ struct ScrollableSpeakingResultView: View {
         .background(Color.clear)
     }
 
+    private var expressionSection: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Button(action: {
+                    showExpression = false
+                }) {
+                    Image(systemName: "chevron.up")
+                        .font(.title2)
+                        .foregroundColor(.primary)
+                }
+                Spacer()
+            }
+            .padding(.top, 10)
+            .padding(.horizontal, 20)
+
+            // Expression content
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(expressionViewModel.state.originalText)
+                            .font(.custom(FontName.pretendardBold.rawValue, size: 18))
+                            .foregroundStyle(.nmGrayscale1)
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal, 20)
+
+                        VStack(alignment: .leading, spacing: 8) {
+                            Rectangle()
+                                .fill(.nmGrayscale4)
+                                .frame(height: 4)
+                                .padding(.leading, 20)
+
+                            Text(expressionViewModel.state.translatedText)
+                                .font(.body)
+                                .foregroundColor(.nmGrayscale2)
+                                .multilineTextAlignment(.leading)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color(.systemGray6))
+                                )
+                                .padding(.horizontal, 20)
+                        }
+                    }
+                    .padding(.top, 30)
+
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("In other cases")
+                            .font(.custom(FontName.pretendardBold.rawValue, size: 22))
+                            .padding(.horizontal, 20)
+
+                        ExpressionCardsScrollView(viewModel: expressionViewModel)
+                    }
+                    .padding(.top, 40)
+
+                    Spacer(minLength: 100)
+                }
+            }
+            .scrollDisabled(true)
+
+            VStack(spacing: 0) {
+                Divider()
+
+                Button(action: {
+                    Task {
+                        await expressionViewModel.saveExpression()
+                        router.popToRoot()
+                    }
+                }) {
+                    Text("Save")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.black)
+                        .cornerRadius(0)
+                }
+            }
+        }
+        .background(Color(.nmBackgroundResult))
+    }
 
     // MARK: - SpeakingResult Components
 

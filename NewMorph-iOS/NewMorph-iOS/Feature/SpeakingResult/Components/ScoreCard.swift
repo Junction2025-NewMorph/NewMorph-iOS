@@ -15,28 +15,24 @@ struct ScoreCard: View {
             // Title and subtitle
             VStack(alignment: .leading, spacing: 8) {
                 Text(scoreData.title)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primary)
+                    .font(.custom(FontName.pretendardBold.rawValue, size: 22))
+                    .foregroundColor(.nmGrayscale1)
                 
                 Text(scoreData.subtitle)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(.custom(FontName.pretendardMedium.rawValue, size: 14))
+                    .foregroundColor(.nmGrayscale4)
                     .lineLimit(2)
             }
             
-            // Score and chart
             HStack(alignment: .bottom, spacing: 20) {
-                // Score number
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("\(scoreData.score)")
-                        .font(.system(size: 44, weight: .semibold))
+                        .font(.custom(FontName.pretendardBold.rawValue, size: 32))
                         .foregroundColor(colorForType(.primary))
 
                     if scoreData.chartType == .arc {
                         Text("%")
-                            .font(.title3)
-                            .fontWeight(.semibold)
+                            .font(.custom(FontName.pretendardBold.rawValue, size: 20))
                             .foregroundColor(colorForType(.primary))
                     }
                 }
