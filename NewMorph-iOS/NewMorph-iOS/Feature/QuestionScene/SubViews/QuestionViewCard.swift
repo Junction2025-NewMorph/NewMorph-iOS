@@ -20,12 +20,13 @@ struct QuestionViewCard: View {
                     DayEntryView(text: $entry.answer)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
+                .ignoresSafeArea(.all)
 
             Image(.mainCharacterBasic)
                 .offset(y: -50)
         }
         .padding(.top, 43)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -50,4 +51,8 @@ struct DayEntryView: View {
                 .autocorrectionDisabled(false)
         }
     }
+}
+
+#Preview {
+    QuestionViewCard(entry: JournalEntry(date: .now, prompt: "d", answer: "d"))
 }
