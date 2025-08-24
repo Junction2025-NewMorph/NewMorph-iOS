@@ -122,22 +122,25 @@ final class ExpressionViewModel: ObservableObject {
             return AttributedString(state.userSpeechText)
         }
         
+        // 기존 방식 유지 (correctText와 비교)
         return TextDiffUtility.highlightedUserAttributedText(
             userText: state.userSpeechText,
             correctText: state.correctText
         )
     }
     
-    // MARK: - Natural Text Display Methods
+    // MARK: - Natural Text Display Methods (New TextDiffer 사용)
     func getHighlightedNaturalText() -> AttributedString {
         guard let expressions = state.expressions, !state.userSpeechText.isEmpty else {
             return AttributedString(getExpressionForMode(.natural))
         }
         
-        return TextDiffUtility.highlightedNaturalAttributedText(
-            naturalText: expressions.natural,
-            originalText: state.userSpeechText
-        )
+        // 특수문자를 필터링한 토큰으로 비교
+        let originalTokens = TextTokenizer.tokenizeForDiff(state.userSpeechText)
+        let naturalTokens = TextTokenizer.tokenizeForDiff(expressions.natural)
+        let operations = TextDiffer.diff(original: originalTokens, natural: naturalTokens)
+        
+        return AttributedStringBuilder.buildNaturalAttributed(from: operations)
     }
     
     func getHighlightedOriginalText() -> AttributedString {
@@ -145,9 +148,28 @@ final class ExpressionViewModel: ObservableObject {
             return AttributedString(state.userSpeechText)
         }
         
-        return TextDiffUtility.highlightedOriginalAttributedText(
-            originalText: state.userSpeechText,
-            naturalText: expressions.natural
+        // 특수문자를 필터링한 토큰으로 비교
+        let originalTokens = TextTokenizer.tokenizeForDiff(state.userSpeechText)
+        let naturalTokens = TextTokenizer.tokenizeForDiff(expressions.natural)
+        let operations = TextDiffer.diff(original: originalTokens, natural: naturalTokens)
+        
+        return AttributedStringBuilder.buildOriginalAttributed(from: operations)
+    }
+    
+    // MARK: - 디버깅용 메서드
+    func printTextComparison() {
+        guard let expressions = state.expressions, !state.userSpeechText.isEmpty else { return }
+        
+        print("🔍 특수문자 필터링 적용된 비교:")
+        let originalTokens = TextTokenizer.tokenizeForDiff(state.userSpeechText)
+        let naturalTokens = TextTokenizer.tokenizeForDiff(expressions.natural)
+        
+        print("원문 필터링된 토큰: \(originalTokens.map { "\"\($0.text)\"" }.joined(separator: ", "))")
+        print("자연 필터링된 토큰: \(naturalTokens.map { "\"\($0.text)\"" }.joined(separator: ", "))")
+        
+        AttributedStringBuilder.printDifferences(
+            original: state.userSpeechText,
+            natural: expressions.natural
         )
     }
 }
