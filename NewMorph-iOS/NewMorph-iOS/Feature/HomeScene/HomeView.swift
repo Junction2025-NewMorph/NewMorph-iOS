@@ -70,8 +70,10 @@ struct HomeView: View {
             .padding(.horizontal, 20)
             .animation(.snappy, value: subscene)
             
-            if hasAnswer {
+            if hasAnswer && subscene == .question {
                 NMButton(action: { router.push(.result) }, title: "Done")
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+                    .zIndex(0)
             }
         }
         .background(.nmBackground1Main)
@@ -140,4 +142,6 @@ private extension HomeView {
 
 #Preview {
     HomeView()
+        .environment(NavigationRouter())
+        .modelContainer(for: JournalEntry.self)
 }
