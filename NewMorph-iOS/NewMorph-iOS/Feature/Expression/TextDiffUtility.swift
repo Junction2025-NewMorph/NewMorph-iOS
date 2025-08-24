@@ -127,4 +127,48 @@ struct TextDiffUtility {
         
         return attributedString
     }
+    
+    /// Natural text에서 original text와 다른 부분을 초록색 형광펜으로 하이라이트
+    static func highlightedNaturalAttributedText(naturalText: String, originalText: String) -> AttributedString {
+        var attributedString = AttributedString(naturalText)
+        let rangesToHighlight = mismatchRanges(in: naturalText, comparedTo: originalText)
+        
+        for range in rangesToHighlight {
+            if let stringRange = Range(range, in: naturalText) {
+                var segment = AttributedString(String(naturalText[stringRange]))
+                segment.backgroundColor = Color("nmGreen").opacity(0.55)   // nmGreen 형광펜
+                segment.foregroundColor = .black
+                
+                // 해당 범위의 텍스트를 하이라이트된 버전으로 교체
+                let attributedRange = attributedString.range(of: String(naturalText[stringRange]))
+                if let attributedRange = attributedRange {
+                    attributedString.replaceSubrange(attributedRange, with: segment)
+                }
+            }
+        }
+        
+        return attributedString
+    }
+    
+    /// Original text에서 natural text와 다른 부분을 굵게 표시
+    static func highlightedOriginalAttributedText(originalText: String, naturalText: String) -> AttributedString {
+        var attributedString = AttributedString(originalText)
+        let rangesToHighlight = mismatchRanges(in: originalText, comparedTo: naturalText)
+        
+        for range in rangesToHighlight {
+            if let stringRange = Range(range, in: originalText) {
+                var segment = AttributedString(String(originalText[stringRange]))
+                segment.font = .system(.body, weight: .bold)
+                segment.foregroundColor = .primary
+                
+                // 해당 범위의 텍스트를 굵은 버전으로 교체
+                let attributedRange = attributedString.range(of: String(originalText[stringRange]))
+                if let attributedRange = attributedRange {
+                    attributedString.replaceSubrange(attributedRange, with: segment)
+                }
+            }
+        }
+        
+        return attributedString
+    }
 }

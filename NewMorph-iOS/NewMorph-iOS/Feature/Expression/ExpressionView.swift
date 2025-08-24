@@ -40,21 +40,22 @@ struct ExpressionView: View {
                 VStack(spacing: 20) {
                     // Main content card
                     VStack(alignment: .leading, spacing: 20) {
-                        // Original text section with highlighting
-                        Text(viewModel.getHighlightedUserSpeech())
+                        // Natural text section with highlighting (녹색 형광펜으로 다른 부분 표시)
+                        Text(viewModel.getHighlightedNaturalText())
                             .font(.title2)
                             .fontWeight(.semibold)
                             .multilineTextAlignment(.leading)
                             .lineSpacing(4)
-                        // Translation text with left line (separate card)
+                        
+                        // Original user speech with left line (굵게 처리된 다른 부분)
                         HStack(alignment: .top, spacing: 0) {
                             // Left vertical line
                             Rectangle()
                                 .fill(Color("nmGrayscale4").opacity(0.6))
                                 .frame(width: 4)
                             
-                            // Translation text
-                            Text(viewModel.state.translatedText)
+                            // Original user speech text
+                            Text(viewModel.getHighlightedOriginalText())
                                 .font(.body)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.leading)
@@ -113,9 +114,16 @@ struct ExpressionView: View {
             viewModel.loadJournalEntry(modelContext: modelContext)
             await viewModel.generateExpressions()
             
-            // 테스트용 데이터 설정 (실제 앱에서는 실제 데이터로 대체)
-            viewModel.updateUserSpeechText("I just finished Crash Landing on You. I liked it lot — some parts were kinda cringy, but overall it was super fun")
-            viewModel.updateCorrectText("I just finished Crash Landing on You. I liked it a lot — some parts were kinda cringy, but overall it was super fun")
+            // 테스트용 데이터 설정 (development only - 실제 앱에서는 API에서 데이터 로드)
+            if viewModel.state.expressions == nil {
+                let testExpressions = EnglishExpressions(
+                    natural: "I just finished Crash Landing on You. I liked it a lot — some parts were kinda cringy, but overall it was super fun",
+                    friend: "Just finished Crash Landing on You! Loved it, though some parts were pretty cringy, but still super fun overall",
+                    family: "I just finished watching Crash Landing on You. I really enjoyed it, although some scenes were a bit awkward, but it was very entertaining",
+                    third: "I have recently completed viewing Crash Landing on You. While certain segments were somewhat awkward, the overall experience was quite enjoyable"
+                )
+                viewModel.updateExpressions(testExpressions)
+            }
         }
     }
 }
