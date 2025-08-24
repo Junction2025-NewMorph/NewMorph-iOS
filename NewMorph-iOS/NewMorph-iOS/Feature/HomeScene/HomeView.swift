@@ -63,7 +63,7 @@ struct HomeView: View {
                     VStack {
                         Spacer()
                         if hasAnswer && subscene == .question {
-                            NMButton(action: { router.push(.result()) }, title: "Done")
+                            NMButton(action: { router.push(.speakingResult(date: currentDate)) }, title: "Done")
                                 .ignoresSafeArea(.keyboard, edges: .bottom)
                         }
                     }
@@ -80,9 +80,6 @@ struct HomeView: View {
                 }
             }
             .animation(.snappy, value: subscene)
-            if hasAnswer {
-                NMButton(action: { router.push(.speakingResult(date: currentDate)) }, title: "Done")
-            }
         }
         .background(.nmBackground1Main)
         .onAppear {
