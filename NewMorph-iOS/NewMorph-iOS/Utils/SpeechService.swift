@@ -134,9 +134,10 @@ private extension SpeechService {
         audioEngine?.inputNode.removeTap(onBus: 0)
         audioEngine?.stop()
         
-        if let modules = speechAnalyzer?.modules {
+        if let analyzer = speechAnalyzer {
             Task { [weak self] in
                 guard let self else { return }
+                let modules = await analyzer.modules
                 let fmt = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: modules)
                 self.analyzerFormat = fmt
             }
@@ -240,11 +241,11 @@ extension SpeechService {
             try await downloader.downloadAndInstall()
         }
     }
-
-    func deallocate() async {
-        let allocated = await AssetInventory.allocatedLocales
-        for locale in allocated { await AssetInventory.deallocate(locale: locale) }
-    }
+    
+//    func deallocate() async {
+//        let allocated = await AssetInventory.allocatedLocales
+//        for locale in allocated { await AssetInventory().deallocate(locale: locale) }
+//    }
 
     nonisolated private static func calculateMicLevel(from buffer: AVAudioPCMBuffer) -> Float {
         guard let data = buffer.floatChannelData?[0] else { return -70 }

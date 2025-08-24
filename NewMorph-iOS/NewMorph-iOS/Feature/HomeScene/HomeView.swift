@@ -13,6 +13,7 @@ public enum Subscene { case question, calendar }
 struct HomeView: View {
     @Environment(NavigationRouter.self) private var router
     @Environment(\.modelContext) private var context
+    @Environment(AppContainer.self) private var container
 
     @State private var month = MonthContext(
         year: Calendar.current.component(.year, from: Date()),
@@ -79,6 +80,9 @@ struct HomeView: View {
                 }
             }
             .animation(.snappy, value: subscene)
+            if hasAnswer {
+                NMButton(action: { router.push(.speakingResult(date: currentDate)) }, title: "Done")
+            }
         }
         .background(.nmBackground1Main)
         .onAppear {
@@ -112,7 +116,15 @@ private extension HomeView {
         }
         let desc = FetchDescriptor<JournalEntry>(predicate: predicate, sortBy: [.init(\.date)])
         do {
-            entry = try context.fetch(desc).first
+            if let existingEntry = try context.fetch(desc).first {
+                entry = existingEntry
+            } else {
+                // 오늘 날짜의 entry가 없으면 랜덤 질문으로 임시 entry 생성 (답변은 빈 문자열)
+                let randomQuestion = container.getRandomQuestionUseCase.execute()
+                let tempEntry = JournalEntry(date: date, prompt: randomQuestion, answer: "")
+                entry = tempEntry
+                // 아직 context에는 insert하지 않음 - 사용자가 답변을 입력할 때 insert
+            }
         } catch {
             print("SwiftData fetch error: \(error)")
             entry = nil
@@ -133,7 +145,9 @@ private extension HomeView {
                 existing.answer = answer
                 entry = existing
             } else {
-                let new = JournalEntry(date: date, prompt: "최근 유튜브?", answer: answer)
+                // 새로운 entry 생성 - 이미 entry에 있는 prompt 사용 (loadEntry에서 설정된 랜덤 질문)
+                let prompt = entry?.prompt ?? container.getRandomQuestionUseCase.execute()
+                let new = JournalEntry(date: date, prompt: prompt, answer: answer)
                 context.insert(new)
                 entry = new
             }

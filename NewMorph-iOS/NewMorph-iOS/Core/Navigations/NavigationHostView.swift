@@ -28,12 +28,29 @@ struct NavigationHostView: View {
         case .demo:
             let viewModel = DemoViewModel(useCase: container.normalizeEnglishUseCase)
             DemoView(viewModel: viewModel)
+        case .expression(let date):
+            let viewModel = ExpressionViewModel(
+                useCase: container.normalizeEnglishUseCase,
+                targetDate: date
+            )
+            ExpressionView(viewModel: viewModel)
+        case .speakingResult(let date):
+            let speakingResultVM = SpeakingResultViewModel()
+            let expressionVM = ExpressionViewModel(
+                useCase: container.normalizeEnglishUseCase,
+                targetDate: date
+            )
+            ScrollableSpeakingResultView(speakingResultViewModel: speakingResultVM, expressionViewModel: expressionVM)
         case .question:
             QuetionView(entry: nil, onMicTapped: {})
         case .calender:
             CalenderView()
-        case .result:
-            ResultView()
+        case .result(let date):
+            let viewModel = ExpressionViewModel(
+                useCase: container.normalizeEnglishUseCase,
+                targetDate: date
+            )
+            ExpressionView(viewModel: viewModel)
         }
     }
 }
