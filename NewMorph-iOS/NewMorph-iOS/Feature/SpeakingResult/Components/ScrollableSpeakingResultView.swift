@@ -36,9 +36,16 @@ struct ScrollableSpeakingResultView: View {
                             .id("speakingResult")
 
                         // Expression section
-                        expressionSection
-                            .frame(minHeight: geometry.size.height)
-                            .id("expression")
+                        ExpressionView(viewModel: expressionViewModel) {
+                            showExpression = false
+                        }
+                        .frame(minHeight: geometry.size.height)
+                        .id("expression")
+                        .onAppear {
+                            // 테스트용 데이터 설정 (실제 앱에서는 실제 데이터로 대체)
+                            expressionViewModel.updateUserSpeechText("I just finished Crash Landing on You. I liked it lot — some parts were kinda cringy, but overall it was super fun")
+                            expressionViewModel.updateCorrectText("I just finished Crash Landing on You. I liked it a lot — some parts were kinda cringy, but overall it was super fun")
+                        }
                     }
                 }
                 .background(Color(.nmBackgroundResult))
@@ -99,93 +106,6 @@ struct ScrollableSpeakingResultView: View {
         .background(Color.clear)
     }
 
-    private var expressionSection: some View {
-        VStack(spacing: 0) {
-            // Top navigation area with scroll back button
-            HStack {
-                Spacer()
-                Button(action: {
-                    showExpression = false
-                }) {
-                    Image(systemName: "chevron.up")
-                        .font(.title2)
-                        .foregroundColor(.primary)
-                }
-                Spacer()
-            }
-            .padding(.top, 10)
-            .padding(.horizontal, 20)
-
-            // Expression content
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(expressionViewModel.state.originalText)
-                            .font(.title3)
-                            .fontWeight(.medium)
-                            .foregroundColor(.primary)
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal, 20)
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Rectangle()
-                                .fill(Color(.systemGray6))
-                                .frame(height: 4)
-                                .padding(.leading, 20)
-
-                            Text(expressionViewModel.state.translatedText)
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.leading)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 12)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color(.systemGray6))
-                                )
-                                .padding(.horizontal, 20)
-                        }
-                    }
-                    .padding(.top, 30)
-
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("In other cases")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 20)
-
-                        ExpressionCardsScrollView(
-                            viewModel: expressionViewModel
-                        )
-                    }
-                    .padding(.top, 40)
-
-                    Spacer(minLength: 100)
-                }
-            }
-            .scrollDisabled(true)  // Disable inner scrolling
-
-            // Bottom Save button
-            VStack(spacing: 0) {
-                Divider()
-
-                Button(action: {
-                    Task {
-                        await expressionViewModel.saveExpression()
-                    }
-                }) {
-                    Text("Save")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.black)
-                        .cornerRadius(0)
-                }
-            }
-        }
-        .background(Color(.nmBackgroundResult))
-    }
 
     // MARK: - SpeakingResult Components
 

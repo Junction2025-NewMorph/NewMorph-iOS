@@ -39,8 +39,9 @@ final class ExpressionViewModel: ObservableObject {
         
         do {
             if let journalEntry = try modelContext.fetch(descriptor).first {
-                // JournalEntry의 answer를 originalText로 사용
+                // JournalEntry의 answer를 originalText와 userSpeechText로 사용 
                 state.originalText = journalEntry.answer.isEmpty ? state.originalText : journalEntry.answer
+                state.userSpeechText = journalEntry.answer.isEmpty ? state.userSpeechText : journalEntry.answer
             }
         } catch {
             print("JournalEntry fetch error: \(error)")
@@ -101,5 +102,52 @@ final class ExpressionViewModel: ObservableObject {
         case .formal:
             return expressions.third
         }
+    }
+    
+    // MARK: - Text Comparison Methods
+    func updateCorrectText(_ text: String) {
+        state.correctText = text
+    }
+    
+    func updateUserSpeechText(_ text: String) {
+        state.userSpeechText = text
+    }
+    
+    func updateExpressions(_ expressions: EnglishExpressions) {
+        state.expressions = expressions
+    }
+    
+    func getHighlightedUserSpeech() -> AttributedString {
+        guard !state.userSpeechText.isEmpty, !state.correctText.isEmpty else {
+            return AttributedString(state.userSpeechText)
+        }
+        
+        return TextDiffUtility.highlightedUserAttributedText(
+            userText: state.userSpeechText,
+            correctText: state.correctText
+        )
+    }
+    
+    // MARK: - Natural Text Display Methods
+    func getHighlightedNaturalText() -> AttributedString {
+        guard let expressions = state.expressions, !state.userSpeechText.isEmpty else {
+            return AttributedString(getExpressionForMode(.natural))
+        }
+        
+        return TextDiffUtility.highlightedNaturalAttributedText(
+            naturalText: expressions.natural,
+            originalText: state.userSpeechText
+        )
+    }
+    
+    func getHighlightedOriginalText() -> AttributedString {
+        guard let expressions = state.expressions, !state.userSpeechText.isEmpty else {
+            return AttributedString(state.userSpeechText)
+        }
+        
+        return TextDiffUtility.highlightedOriginalAttributedText(
+            originalText: state.userSpeechText,
+            naturalText: expressions.natural
+        )
     }
 }
